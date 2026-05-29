@@ -71,11 +71,11 @@ ul {
 
     <button onclick="attendance()">출석체크 +10P 📅</button>
     <button onclick="randomBox()">랜덤 뽑기 800000P 🎰</button>
-
+<button onclick="shareScore()">점수 자랑하기 📣</button>
     <h3>쿠폰 상점 🎁</h3>
     <button onclick="buyCoupon('뽀뽀 쿠폰 😘', 10)">뽀뽀 쿠폰 10P</button>
     <button onclick="buyCoupon('안마 쿠폰 💆', 30)">안마 쿠폰 30P</button>
-    <<button onclick="buyCoupon('치킨 사주기 쿠폰 🍗', 100000)">치킨 쿠폰 100000P</button>
+    <button onclick="buyCoupon('치킨 사주기 쿠폰 🍗', 100000)">치킨 쿠폰 100000P</button>
 <button onclick="buyCoupon('소원권 ✨', 1000000)">소원권 1000000P</button>
 
     <p id="couponMsg"></p>
@@ -194,6 +194,22 @@ point -= 800000;
   document.getElementById("couponMsg").innerText = "랜덤 결과: " + result;
   renderInventory();
   saveData();
+}
+  function shareScore() {
+  const text = `나 지금 제홍 전용 페이지에서 ${point}P 모았다 💖
+너도 해봐 👉 https://금규.com`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: "제홍 전용 페이지 💕",
+      text: text,
+      url: "https://금규.com"
+    });
+  } else {
+    navigator.clipboard.writeText(text);
+    document.getElementById("couponMsg").innerText =
+      "공유 문구 복사됨! 카톡에 붙여넣어 💕";
+  }
 }
 </script>
 </body>
