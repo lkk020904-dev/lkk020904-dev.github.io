@@ -70,7 +70,7 @@ ul {
     <p>포인트: <span id="point">0</span>P</p>
 
     <button onclick="attendance()">출석체크 +10P 📅</button>
-    <button onclick="randomBox()">랜덤 뽑기 50P 🎰</button>
+    <button onclick="randomBox()">랜덤 뽑기 800000P 🎰</button>
 
     <h3>쿠폰 상점 🎁</h3>
     <button onclick="buyCoupon('뽀뽀 쿠폰 😘', 10)">뽀뽀 쿠폰 10P</button>
@@ -168,12 +168,12 @@ function attendance() {
 }
 
 function randomBox() {
-  if (point < 50) {
-    document.getElementById("couponMsg").innerText = "랜덤 뽑기는 50P 필요함 😤";
-    return;
-  }
+  if (point < 800000) {
+  document.getElementById("couponMsg").innerText = "랜덤 뽑기는 800000P 필요함 😤";
+  return;
+}
 
-  point -= 50;
+point -= 800000;
 
   const prizes = [
     "꽝 😭",
