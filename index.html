@@ -1,11 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="utf-8">
-<title>금규.com</title>
+<meta charset="UTF-8">
+<title>재홍 전용 페이지</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffe1ec, #e8f0ff);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .box {
+    background: white;
+    padding: 35px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    width: 85%;
+    max-width: 420px;
+  }
+  h1 { color: #ff4f8b; }
+  p { font-size: 18px; line-height: 1.6; }
+  button {
+    margin-top: 20px;
+    padding: 14px 22px;
+    border: 0;
+    border-radius: 999px;
+    background: #ff4f8b;
+    color: white;
+    font-size: 16px;
+  }
+</style>
 </head>
 <body>
-<h1>안녕하세요!</h1>
-<p>금규의 첫 사이트입니다.</p>
+  <div class="box">
+    <h1>재홍 전용 페이지 💖</h1>
+    <p>여기는 금규가 만든<br>세상에서 제일 귀여운 전용 공간입니다.</p>
+    <p id="msg">오늘도 사랑해 😘</p>
+    <button onclick="changeMsg()">눌러봐</button>
+  </div>
+
+<script>
+const messages = [
+  "오늘도 사랑해 😘",
+  "너는 금규 전용 인간임 💘",
+  "보고 싶다 이자식아 🫶",
+  "밥 잘 챙겨 먹어라!",
+  "금규가 제일 좋아함 ❤️"
+];
+
+function changeMsg() {
+  const random = Math.floor(Math.random() * messages.length);
+  document.getElementById("msg").innerText = messages[random];
+}
+</script>
 </body>
 </html>
