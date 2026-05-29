@@ -79,7 +79,13 @@ ul {
 <button onclick="buyCoupon('소원권 ✨', 1000000)">소원권 1000000P</button>
 
     <p id="couponMsg"></p>
+<h3>가위바위보 🎮</h3>
 
+<button onclick="playRPS('가위')">✌️ 가위</button>
+<button onclick="playRPS('바위')">✊ 바위</button>
+<button onclick="playRPS('보')">✋ 보</button>
+
+<p id="rpsResult"></p>
     <h3>보유 쿠폰 🎫</h3>
     <ul id="inventory"></ul>
   </div>
@@ -201,7 +207,7 @@ point -= 800000;
 
   if (navigator.share) {
     navigator.share({
-      title: "제홍 전용 페이지 💕",
+      title: "재홍 전용 페이지 💕",
       text: text,
       url: "https://금규.com"
     });
@@ -210,6 +216,37 @@ point -= 800000;
     document.getElementById("couponMsg").innerText =
       "공유 문구 복사됨! 카톡에 붙여넣어 💕";
   }
+}
+  function playRPS(user) {
+
+  const choices = ["가위", "바위", "보"];
+  const computer = choices[Math.floor(Math.random() * 3)];
+
+  let result = "";
+
+  if (user === computer) {
+    point += 10;
+    result = `비김 🤝 (+10P) 상대: ${computer}`;
+  }
+
+  else if (
+    (user === "가위" && computer === "보") ||
+    (user === "바위" && computer === "가위") ||
+    (user === "보" && computer === "바위")
+  ) {
+    point += 100;
+    result = `승리 😎 (+100P) 상대: ${computer}`;
+  }
+
+  else {
+    point = Math.max(0, point - 20);
+    result = `패배 😭 (-20P) 상대: ${computer}`;
+  }
+
+  document.getElementById("point").innerText = point;
+  document.getElementById("rpsResult").innerText = result;
+
+  saveData();
 }
 </script>
 </body>
