@@ -1,29 +1,88 @@
-<div id="game">
-  <h2>하트 포인트 게임 🎮</h2>
-  <p>하트를 누르면 포인트가 올라감!</p>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>재홍 전용 페이지</title>
 
-  <div class="heart" onclick="earnPoint()">💖</div>
+<meta property="og:title" content="재홍 전용 페이지 💕">
+<meta property="og:description" content="재홍이만 들어와">
+<meta property="og:image" content="https://lkk020904-dev.github.io/IMG_7485.jpeg">
+<meta property="og:url" content="https://금규.com">
+<meta property="og:type" content="website">
 
-  <p>포인트: <span id="point">0</span>P</p>
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffe1ec, #e8f0ff);
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  width: 85%;
+  max-width: 430px;
+}
+h1 { color: #ff4f8b; }
+button {
+  margin: 7px;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: #ff4f8b;
+  color: white;
+  font-size: 15px;
+}
+#game { display: none; margin-top: 20px; }
+.heart {
+  font-size: 65px;
+  cursor: pointer;
+  user-select: none;
+}
+ul {
+  text-align: left;
+  display: inline-block;
+}
+</style>
+</head>
 
-  <h3>쿠폰 상점 🎁</h3>
+<body>
+<div class="box">
+  <h1>재홍 전용 페이지 💖</h1>
+  <p>여기는 금규가 만든 비밀 공간입니다.</p>
 
-  <button onclick="buyCoupon('뽀뽀 쿠폰 😘', 10)">
-    뽀뽀 쿠폰 😘 (10P)
-  </button>
+  <p id="msg">오늘도 사랑해 😘</p>
+  <button onclick="changeMsg()">사랑 문구 보기</button>
+  <button onclick="showGame()">게임하기 🎮</button>
 
-  <button onclick="buyCoupon('안마 쿠폰 💆', 30)">
-    안마 쿠폰 💆 (30P)
-  </button>
+  <div id="game">
+    <h2>하트 포인트 게임 🎮</h2>
+    <p>하트를 누르면 포인트가 올라감!</p>
 
-  <button onclick="buyCoupon('치킨 사주기 쿠폰 🍗', 100)">
-    치킨 사주기 🍗 (100P)
-  </button>
+    <div class="heart" onclick="earnPoint()">💖</div>
 
-  <p id="couponMsg"></p>
+    <p>포인트: <span id="point">0</span>P</p>
 
-  <h3>보유 쿠폰 🎫</h3>
-  <ul id="inventory"></ul>
+    <button onclick="attendance()">출석체크 +10P 📅</button>
+    <button onclick="randomBox()">랜덤 뽑기 50P 🎰</button>
+
+    <h3>쿠폰 상점 🎁</h3>
+    <button onclick="buyCoupon('뽀뽀 쿠폰 😘', 10)">뽀뽀 쿠폰 10P</button>
+    <button onclick="buyCoupon('안마 쿠폰 💆', 30)">안마 쿠폰 30P</button>
+    <button onclick="buyCoupon('치킨 사주기 쿠폰 🍗', 100)">치킨 쿠폰 100P</button>
+    <button onclick="buyCoupon('소원권 ✨', 200)">소원권 200P</button>
+
+    <p id="couponMsg"></p>
+
+    <h3>보유 쿠폰 🎫</h3>
+    <ul id="inventory"></ul>
+  </div>
 </div>
 
 <script>
@@ -35,6 +94,17 @@ const messages = [
   "금규가 제일 좋아함 ❤️"
 ];
 
+let point = Number(localStorage.getItem("point")) || 0;
+let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+document.getElementById("point").innerText = point;
+renderInventory();
+
+function saveData() {
+  localStorage.setItem("point", point);
+  localStorage.setItem("inventory", JSON.stringify(inventory));
+}
+
 function changeMsg() {
   const random = Math.floor(Math.random() * messages.length);
   document.getElementById("msg").innerText = messages[random];
@@ -44,29 +114,87 @@ function showGame() {
   document.getElementById("game").style.display = "block";
 }
 
-let point = 0;
-
 function earnPoint() {
   point++;
   document.getElementById("point").innerText = point;
+  saveData();
 }
 
 function buyCoupon(name, price) {
   if (point >= price) {
     point -= price;
-
+    inventory.push(name);
     document.getElementById("point").innerText = point;
-
-    document.getElementById("couponMsg").innerText =
-      name + " 구매 완료! 💕";
-
-    const li = document.createElement("li");
-    li.innerText = name;
-    document.getElementById("inventory").appendChild(li);
-
+    document.getElementById("couponMsg").innerText = name + " 구매 완료! 💕";
+    renderInventory();
+    saveData();
   } else {
-    document.getElementById("couponMsg").innerText =
-      "포인트 부족함 😤";
+    document.getElementById("couponMsg").innerText = "포인트 부족함 😤 더 눌러!";
   }
 }
+
+function renderInventory() {
+  const list = document.getElementById("inventory");
+  list.innerHTML = "";
+
+  if (inventory.length === 0) {
+    const li = document.createElement("li");
+    li.innerText = "아직 쿠폰 없음";
+    list.appendChild(li);
+    return;
+  }
+
+  inventory.forEach(item => {
+    const li = document.createElement("li");
+    li.innerText = item;
+    list.appendChild(li);
+  });
+}
+
+function attendance() {
+  const today = new Date().toDateString();
+  const last = localStorage.getItem("attendance");
+
+  if (last === today) {
+    document.getElementById("couponMsg").innerText = "오늘 출석은 이미 했음 😤";
+    return;
+  }
+
+  point += 10;
+  localStorage.setItem("attendance", today);
+  document.getElementById("point").innerText = point;
+  document.getElementById("couponMsg").innerText = "출석 완료! +10P 💕";
+  saveData();
+}
+
+function randomBox() {
+  if (point < 50) {
+    document.getElementById("couponMsg").innerText = "랜덤 뽑기는 50P 필요함 😤";
+    return;
+  }
+
+  point -= 50;
+
+  const prizes = [
+    "꽝 😭",
+    "뽀뽀 쿠폰 😘",
+    "안마 쿠폰 💆",
+    "소원권 ✨",
+    "금규 칭찬 10번 쿠폰 💖",
+    "치킨 사주기 쿠폰 🍗"
+  ];
+
+  const result = prizes[Math.floor(Math.random() * prizes.length)];
+
+  if (result !== "꽝 😭") {
+    inventory.push(result);
+  }
+
+  document.getElementById("point").innerText = point;
+  document.getElementById("couponMsg").innerText = "랜덤 결과: " + result;
+  renderInventory();
+  saveData();
+}
 </script>
+</body>
+</html>
