@@ -68,7 +68,11 @@ ul {
     <div class="heart" onclick="earnPoint()">💖</div>
 
     <p>포인트: <span id="point">0</span>P</p>
-
+<h3>포인트 통장 🏦</h3>
+<p>통장 잔액: <span id="bank">0</span>P</p>
+<button onclick="depositBank()">입금하기</button>
+<button onclick="withdrawBank()">출금하기</button>
+<button onclick="getInterest()">오늘 이자 받기 💰</button>
     <button onclick="attendance()">출석체크 +10P 📅</button>
     <button onclick="randomBox()">랜덤 뽑기 800000P 🎰</button>
 <button onclick="shareScore()">점수 자랑하기 📣</button>
@@ -102,13 +106,18 @@ const messages = [
 
 let point = Number(localStorage.getItem("point")) || 0;
 let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+let bank = Number(localStorage.getItem("bank")) || 0;
+let lastInterest = localStorage.getItem("lastInterest") || "";
 
+document.getElementById("bank").innerText = bank;
 document.getElementById("point").innerText = point;
 renderInventory();
 
 function saveData() {
   localStorage.setItem("point", point);
   localStorage.setItem("inventory", JSON.stringify(inventory));
+  localStorage.setItem("bank", bank);
+  localStorage.setItem("lastInterest", lastInterest);
 }
 
 function changeMsg() {
@@ -247,6 +256,71 @@ point -= 800000;
   document.getElementById("rpsResult").innerText = result;
 
   saveData();
+}
+  function depositBank() {
+  const amount = Number(prompt("통장에 몇 포인트 넣을까?"));
+
+  if (!amount || amount <= 0) return;
+
+  if (amount > point) {
+    document.getElementById("couponMsg").innerText = "포인트 부족 😭";
+    return;
+  }
+
+  point -= amount;
+  bank += amount;
+
+  document.getElementById("point").innerText = point;
+  document.getElementById("bank").innerText = bank;
+
+  saveData();
+}
+
+function withdrawBank() {
+  const amount = Number(prompt("몇 포인트 출금할까?"));
+
+  if (!amount || amount <= 0) return;
+
+  if (amount > bank) {
+    document.getElementById("couponMsg").innerText = "통장 잔액 부족 😭";
+    return;
+  }
+
+  bank -= amount;
+  point += amount;
+
+  document.getElementById("point").innerText = point;
+  document.getElementById("bank").innerText = bank;
+
+  saveData();
+}
+
+function getInterest() {
+  const today = new Date().toDateString();
+
+  if (lastInterest === today) {
+    document.getElementById("couponMsg").innerText =
+      "오늘 이자는 이미 받았어 😤";
+    return;
+  }
+
+  const interest = Math.floor(bank * 0.05);
+
+  if (interest <= 0) {
+    document.getElementById("couponMsg").innerText =
+      "통장에 돈이 없어 😭";
+    return;
+  }
+
+  bank += interest;
+  lastInterest = today;
+
+  document.getElementById("bank").innerText = bank;
+
+  saveData();
+
+  document.getElementById("couponMsg").innerText =
+    `이자 ${interest}P 받음 🏦`;
 }
 </script>
 </body>
