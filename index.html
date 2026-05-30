@@ -90,6 +90,14 @@ ul {
 <button onclick="playRPS('보')">✋ 보</button>
 
 <p id="rpsResult"></p>
+    <h3>강아지 키우기 🐶</h3>
+<p id="dogStatus">강아지 행복도: 0</p>
+
+<button onclick="feedDog()">밥 주기 🍚 (-50P)</button>
+<button onclick="walkDog()">산책하기 🐾 (-100P)</button>
+<button onclick="petDog()">쓰다듬기 🤍</button>
+
+<p id="dogMsg"></p>
     <h3>보유 쿠폰 🎫</h3>
     <ul id="inventory"></ul>
   </div>
@@ -108,7 +116,10 @@ let point = Number(localStorage.getItem("point")) || 0;
 let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
 let bank = Number(localStorage.getItem("bank")) || 0;
 let lastInterest = localStorage.getItem("lastInterest") || "";
+let dogHappy = Number(localStorage.getItem("dogHappy")) || 0;
 
+document.getElementById("dogStatus").innerText =
+  "강아지 행복도: " + dogHappy;
 document.getElementById("bank").innerText = bank;
 document.getElementById("point").innerText = point;
 renderInventory();
@@ -118,8 +129,9 @@ function saveData() {
   localStorage.setItem("inventory", JSON.stringify(inventory));
   localStorage.setItem("bank", bank);
   localStorage.setItem("lastInterest", lastInterest);
-}
 
+localStorage.setItem("dogHappy", dogHappy);
+ } 
 function changeMsg() {
   const random = Math.floor(Math.random() * messages.length);
   document.getElementById("msg").innerText = messages[random];
@@ -321,6 +333,62 @@ function getInterest() {
 
   document.getElementById("couponMsg").innerText =
     `이자 ${interest}P 받음 🏦`;
+}
+  function updateDog() {
+  document.getElementById("dogStatus").innerText =
+    "강아지 행복도: " + dogHappy;
+
+  document.getElementById("point").innerText = point;
+
+  saveData();
+}
+
+function dogReward() {
+  if (dogHappy >= 100) {
+    dogHappy -= 100;
+    point += 500;
+
+    document.getElementById("dogMsg").innerText =
+      "강아지가 500P를 물어왔어 🐶💰";
+  }
+}
+
+function feedDog() {
+  if (point < 50) {
+    document.getElementById("dogMsg").innerText =
+      "포인트 부족 😭";
+    return;
+  }
+
+  point -= 50;
+  dogHappy += 10;
+
+  dogReward();
+  updateDog();
+}
+
+function walkDog() {
+  if (point < 100) {
+    document.getElementById("dogMsg").innerText =
+      "포인트 부족 😭";
+    return;
+  }
+
+  point -= 100;
+  dogHappy += 20;
+
+  dogReward();
+  updateDog();
+}
+
+function petDog() {
+  dogHappy += 5;
+
+  document.getElementById("dogMsg").innerText =
+    "강아지가 좋아해 🐶💕";
+
+  dogReward();
+  updateDog();
 }
 </script>
 </body>
